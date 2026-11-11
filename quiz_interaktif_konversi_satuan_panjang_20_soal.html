@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interaktif 20 Soal - Konversi Satuan Panjang</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4;
+        }
+        h1, h2, h3, h4, .font-fun {
+            font-family: 'Comic Neue', cursive;
+        }
+        .pulse-slow {
+            animation: pulse 2.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-16">
+
+    <!-- Header Navigation -->
+    <header class="bg-emerald-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-400 text-slate-900 p-2 rounded-xl">
+                    <i class="fa-solid fa-trophy text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl tracking-wide leading-tight">Quiz Petualangan Konversi</h1>
+                    <p class="text-xs text-emerald-100">20 Soal Cerita Matematika Kelas 3 SD</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="progress-badge" class="bg-emerald-800 text-amber-300 font-bold px-3 py-1.5 rounded-full text-xs border border-emerald-500">
+                    Dijawab: 0 / 20
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-6 space-y-6">
+
+        <!-- Info Card & Auto-Save Notice -->
+        <div class="bg-amber-50 rounded-2xl p-4 border-2 border-amber-200 flex items-center justify-between gap-3 text-amber-900 shadow-sm">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-floppy-disk text-2xl text-amber-600"></i>
+                <div class="text-xs md:text-sm">
+                    <strong>Penyimpanan Otomatis Aktif!</strong> Jawabanmu aman tersimpan walau HP/Laptop mati atau halaman ter-reload.
+                </div>
+            </div>
+            <button onclick="resetQuiz()" class="text-xs bg-rose-500 hover:bg-rose-600 text-white font-bold px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                <i class="fa-solid fa-arrows-rotate mr-1"></i> Reset Quiz
+            </button>
+        </div>
+
+        <!-- Layout Utama: Navigasi Nomor Soal & Display Soal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Panel Navigasi Nomor Soal (Kiri) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border-2 border-emerald-100 space-y-4 lg:col-span-1">
+                <div class="flex items-center justify-between border-b pb-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-600"></i> Navigasi Soal
+                    </h3>
+                    <span id="score-live" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                        Skor: 0
+                    </span>
+                </div>
+
+                <!-- Grid Nomor 1-20 -->
+                <div class="grid grid-cols-5 gap-2" id="nav-grid">
+                    <!-- Dynamic rendered by JS -->
+                </div>
+
+                <!-- Legend / Keterangan Warna -->
+                <div class="pt-3 border-t text-[11px] text-slate-500 space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span>
+                        <span>Jawaban Benar</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-rose-500 rounded-full inline-block"></span>
+                        <span>Jawaban Salah</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 bg-slate-200 rounded-full inline-block"></span>
+                        <span>Belum Dijawab</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Lembar Soal Aktif (Kanan) -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border-2 border-emerald-100 lg:col-span-2 space-y-5 flex flex-col justify-between">
+                <div>
+                    <!-- Header Soal Aktif -->
+                    <div class="flex items-center justify-between border-b pb-3 mb-4">
+                        <span id="question-number-badge" class="bg-emerald-600 text-white font-bold px-3 py-1 rounded-lg text-sm">
+                            Soal 1 dari 20
+                        </span>
+                        <span id="question-unit-tag" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full border border-amber-200">
+                            Konversi Satuan
+                        </span>
+                    </div>
+
+                    <!-- Teks Soal -->
+                    <div class="space-y-2">
+                        <p id="question-text" class="text-slate-800 font-semibold text-base md:text-lg leading-relaxed">
+                            Memuat soal...
+                        </p>
+                    </div>
+
+                    <!-- Opsi Jawaban -->
+                    <div class="mt-6 space-y-3" id="options-container">
+                        <!-- Dynamic rendered by JS -->
+                    </div>
+
+                    <!-- Pembahasan / Feedback -->
+                    <div id="explanation-box" class="hidden mt-5 p-4 rounded-xl text-xs md:text-sm font-semibold border space-y-1">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Navigasi Tombol Sebelum & Sesudah -->
+                <div class="flex justify-between items-center pt-4 border-t mt-6">
+                    <button id="btn-prev" onclick="changeQuestion(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <button id="btn-next" onclick="changeQuestion(1)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-xl text-sm transition flex items-center gap-2 shadow-sm">
+                        Berikutnya <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Rangkuman Hasil Akhir (Muncul jika 20 Soal Selesai Dijawab) -->
+        <div id="final-result-card" class="hidden bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-700 text-white rounded-3xl p-8 text-center shadow-xl space-y-4 pulse-slow">
+            <i class="fa-solid fa-award text-6xl text-amber-300"></i>
+            <h2 class="text-3xl font-extrabold font-fun">Selamat! Kamu Menyelesaikan Seluruh Quiz!</h2>
+            <p class="text-emerald-100 text-sm md:text-base">Berikut adalah hasil akhir petualangan matematika kamu hari ini:</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto my-4 text-slate-800">
+                <div class="bg-white p-4 rounded-2xl shadow">
+                    <p class="text-xs text-slate-500 font-bold uppercase">Total Skor</p>
+                    <p id="res-score" class="text-3xl font-black text-emerald-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow">
+                    <p class="text-xs text-slate-500 font-bold uppercase">Benar</p>
+                    <p id="res-correct" class="text-3xl font-black text-emerald-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow">
+                    <p class="text-xs text-slate-500 font-bold uppercase">Salah</p>
+                    <p id="res-wrong" class="text-3xl font-black text-rose-500">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow">
+                    <p class="text-xs text-slate-500 font-bold uppercase">Akurasi</p>
+                    <p id="res-accuracy" class="text-3xl font-black text-blue-600">0%</p>
+                </div>
+            </div>
+
+            <button onclick="resetQuiz()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-6 py-3 rounded-2xl text-base shadow-lg transition transform hover:-translate-y-0.5">
+                <i class="fa-solid fa-rotate-right mr-2"></i> Coba Lagi dari Awal
+            </button>
+        </div>
+
+    </main>
+
+    <!-- JS Logic -->
+    <script>
+        // Web Audio API Sound Effects Generator
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(250, now);
+                    osc.frequency.exponentialRampToValueAtTime(130, now + 0.25);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'win') {
+                    // Fanfare chords
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const subOsc = ctx.createOscillator();
+                        const subGain = ctx.createGain();
+                        subOsc.type = 'triangle';
+                        subOsc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        subGain.gain.setValueAtTime(0.15, now + idx * 0.12);
+                        subGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.4);
+                        subOsc.connect(subGain);
+                        subGain.connect(ctx.destination);
+                        subOsc.start(now + idx * 0.12);
+                        subOsc.stop(now + idx * 0.12 + 0.4);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio play error:", e);
+            }
+        }
+
+        // Database 20 Soal Cerita Konversi Satuan Panjang (KM, HM, DAM, M, DM, CM, MM)
+        const questions = [
+            {
+                id: 1,
+                tag: "KM & M",
+                question: "Dito naik sepeda dari rumah ke taman sejauh 2 kilometer (km), lalu berjalan kaki lagi sejauh 400 meter (m). Berapa total jarak perjalanan Dito dalam satuan meter (m)?",
+                options: [
+                    { label: "A", text: "2.040 m", correct: false },
+                    { label: "B", text: "2.400 m", correct: true },
+                    { label: "C", text: "240 m", correct: false },
+                    { label: "D", text: "600 m", correct: false }
+                ],
+                explanation: "2 km = 2.000 m. Total perjalanan = 2.000 m + 400 m = 2.400 m."
+            },
+            {
+                id: 2,
+                tag: "HM & M",
+                question: "Kiki mengelilingi lapangan sekolah yang lebarnya 3 hektometer (hm). Jika diubah ke dalam satuan meter (m), berapa lebar lapangan tersebut?",
+                options: [
+                    { label: "A", text: "30 m", correct: false },
+                    { label: "B", text: "3.000 m", correct: false },
+                    { label: "C", text: "300 m", correct: true },
+                    { label: "D", text: "30.000 m", correct: false }
+                ],
+                explanation: "1 hm = 100 m. Jadi, 3 hm = 3 x 100 = 300 m."
+            },
+            {
+                id: 3,
+                tag: "M & CM",
+                question: "Ibu membeli kain merah sepanjang 5 meter (m). Ibu memotongnya sepanjang 150 sentimeter (cm) untuk membuat baju doll. Berapa sentimeter (cm) sisa kain Ibu?",
+                options: [
+                    { label: "A", text: "350 cm", correct: true },
+                    { label: "B", text: "450 cm", correct: false },
+                    { label: "C", text: "250 cm", correct: false },
+                    { label: "D", text: "35 cm", correct: false }
+                ],
+                explanation: "5 m = 500 cm. Sisa kain = 500 cm - 150 cm = 350 cm."
+            },
+            {
+                id: 4,
+                tag: "CM & MM",
+                question: "Pensil Dito panjangnya 12 sentimeter (cm). Jika diukur dalam milimeter (mm), berapa panjang pensil Dito?",
+                options: [
+                    { label: "A", text: "1,2 mm", correct: false },
+                    { label: "B", text: "1.200 mm", correct: false },
+                    { label: "C", text: "120 mm", correct: true },
+                    { label: "D", text: "210 mm", correct: false }
+                ],
+                explanation: "1 cm = 10 mm. Maka 12 cm = 12 x 10 = 120 mm."
+            },
+            {
+                id: 5,
+                tag: "DAM & M",
+                question: "Paman menanam pohon kelapa di sepanjang jalan komplek sepanjang 6 dekameter (dam). Berapa meter (m) panjang jalan tersebut?",
+                options: [
+                    { label: "A", text: "60 m", correct: true },
+                    { label: "B", text: "600 m", correct: false },
+                    { label: "C", text: "6 m", correct: false },
+                    { label: "D", text: "6.000 m", correct: false }
+                ],
+                explanation: "1 dam = 10 m. Jadi, 6 dam = 6 x 10 = 60 m."
+            },
+            {
+                id: 6,
+                tag: "M & DM",
+                question: "Sebuah papan tulis memiliki panjang 3 meter (m). Berapa desimeter (dm) panjang papan tulis itu?",
+                options: [
+                    { label: "A", text: "300 dm", correct: false },
+                    { label: "B", text: "30 dm", correct: true },
+                    { label: "C", text: "3000 dm", correct: false },
+                    { label: "D", text: "3 dm", correct: false }
+                ],
+                explanation: "1 m = 10 dm. Maka 3 m = 3 x 10 = 30 dm."
+            },
+            {
+                id: 7,
+                tag: "MM & CM",
+                question: "Ketebalan sebuah buku cerita adalah 40 milimeter (mm). Berapa sentimeter (cm) ketebalan buku tersebut?",
+                options: [
+                    { label: "A", text: "400 cm", correct: false },
+                    { label: "B", text: "40 cm", correct: false },
+                    { label: "C", text: "4 cm", correct: true },
+                    { label: "D", text: "0,4 cm", correct: false }
+                ],
+                explanation: "10 mm = 1 cm (Naik 1 tangga = dibagi 10). Maka 40 mm = 40 : 10 = 4 cm."
+            },
+            {
+                id: 8,
+                tag: "KM & HM",
+                question: "Bus sekolah berjalan sejauh 5 kilometer (km). Berapa hektometer (hm) jarak yang ditempuh bus tersebut?",
+                options: [
+                    { label: "A", text: "50 hm", correct: true },
+                    { label: "B", text: "500 hm", correct: false },
+                    { label: "C", text: "5 hm", correct: false },
+                    { label: "D", text: "5.000 hm", correct: false }
+                ],
+                explanation: "1 km = 10 hm (Turun 1 tangga = dikali 10). Jadi 5 km = 50 hm."
+            },
+            {
+                id: 9,
+                tag: "M, DM & CM",
+                question: "Rani memiliki pita biru 1 meter (m) dan pita kuning 50 desimeter (dm). Berapa sentimeter (cm) total panjang kedua pita Rani?",
+                options: [
+                    { label: "A", text: "150 cm", correct: false },
+                    { label: "B", text: "600 cm", correct: true },
+                    { label: "C", text: "510 cm", correct: false },
+                    { label: "D", text: "60 cm", correct: false }
+                ],
+                explanation: "1 m = 100 cm. 50 dm = 500 cm. Total = 100 cm + 500 cm = 600 cm."
+            },
+            {
+                id: 10,
+                tag: "DM & MM",
+                question: "Tinggi sebuah kotak pensil adalah 2 desimeter (dm). Berapa milimeter (mm) tinggi kotak pensil itu?",
+                options: [
+                    { label: "A", text: "20 mm", correct: false },
+                    { label: "B", text: "200 mm", correct: true },
+                    { label: "C", text: "2.000 mm", correct: false },
+                    { label: "D", text: "20.000 mm", correct: false }
+                ],
+                explanation: "1 dm = 100 mm (Turun 2 tangga = dikali 100). Maka 2 dm = 200 mm."
+            },
+            {
+                id: 11,
+                tag: "M & KM",
+                question: "Para atlet lari telah menempuh jarak 4.000 meter (m). Berapa kilometer (km) jarak lintasan yang sudah dipasang atlet?",
+                options: [
+                    { label: "A", text: "40 km", correct: false },
+                    { label: "B", text: "400 km", correct: false },
+                    { label: "C", text: "4 km", correct: true },
+                    { label: "D", text: "40.000 km", correct: false }
+                ],
+                explanation: "1.000 m = 1 km (Naik 3 tangga = dibagi 1.000). Maka 4.000 m = 4 km."
+            },
+            {
+                id: 12,
+                tag: "HM & DAM",
+                question: "Kakek memiliki sawah sepanjang 8 hektometer (hm). Jika diubah ke dekameter (dam), berapa panjang sawah Kakek?",
+                options: [
+                    { label: "A", text: "80 dam", correct: true },
+                    { label: "B", text: "800 dam", correct: false },
+                    { label: "C", text: "8 dam", correct: false },
+                    { label: "D", text: "8.000 dam", correct: false }
+                ],
+                explanation: "1 hm = 10 dam (Turun 1 tangga = dikali 10). Maka 8 hm = 80 dam."
+            },
+            {
+                id: 13,
+                tag: "CM & M",
+                question: "Tinggi badan Bayu adalah 130 sentimeter (cm). Jika dinyatakan dalam bentuk campuran meter dan sentimeter, tinggi Bayu adalah...",
+                options: [
+                    { label: "A", text: "13 m + 0 cm", correct: false },
+                    { label: "B", text: "1 m + 30 cm", correct: true },
+                    { label: "C", text: "10 m + 30 cm", correct: false },
+                    { label: "D", text: "1 m + 3 cm", correct: false }
+                ],
+                explanation: "130 cm = 100 cm + 30 cm = 1 m + 30 cm."
+            },
+            {
+                id: 14,
+                tag: "DAM & DM",
+                question: "Pak Tani membuat pagar sepanjang 1 dekameter (dam). Berapa desimeter (dm) panjang pagar Pak Tani?",
+                options: [
+                    { label: "A", text: "10 dm", correct: false },
+                    { label: "B", text: "100 dm", correct: true },
+                    { label: "C", text: "1.000 dm", correct: false },
+                    { label: "D", text: "10.000 dm", correct: false }
+                ],
+                explanation: "1 dam = 100 dm (Turun 2 tangga = dikali 100). Jadi 1 dam = 100 dm."
+            },
+            {
+                id: 15,
+                tag: "KM, DAM & M",
+                question: "Jalan utama desa panjangnya 1 kilometer (km). Warga baru memperbaiki jalan sepanjang 30 dekameter (dam). Berapa meter (m) jalan yang BELUM diperbaiki?",
+                options: [
+                    { label: "A", text: "700 m", correct: true },
+                    { label: "B", text: "300 m", correct: false },
+                    { label: "C", text: "970 m", correct: false },
+                    { label: "D", text: "70 m", correct: false }
+                ],
+                explanation: "1 km = 1.000 m. 30 dam = 300 m. Sisa jalan = 1.000 m - 300 m = 700 m."
+            },
+            {
+                id: 16,
+                tag: "DM & CM",
+                question: "Panjang meja belajar Kiki adalah 15 desimeter (dm). Berapa sentimeter (cm) panjang meja Kiki?",
+                options: [
+                    { label: "A", text: "1,5 cm", correct: false },
+                    { label: "B", text: "15 cm", correct: false },
+                    { label: "C", text: "150 cm", correct: true },
+                    { label: "D", text: "1.500 cm", correct: false }
+                ],
+                explanation: "1 dm = 10 cm. Maka 15 dm = 15 x 10 = 150 cm."
+            },
+            {
+                id: 17,
+                tag: "M & MM",
+                question: "Panjang pita hiasan kelas adalah 2 meter (m). Berapa milimeter (mm) panjang pita hiasan kelas?",
+                options: [
+                    { label: "A", text: "20 mm", correct: false },
+                    { label: "B", text: "200 mm", correct: false },
+                    { label: "C", text: "2.000 mm", correct: true },
+                    { label: "D", text: "20.000 mm", correct: false }
+                ],
+                explanation: "1 m = 1.000 mm (Turun 3 tangga = dikali 1.000). Maka 2 m = 2.000 mm."
+            },
+            {
+                id: 18,
+                tag: "HM & M",
+                question: "Ahmad berjalan sejauh 5 hektometer (hm) dan dilanjutkan 200 meter (m). Berapa total jarak Ahmad dalam meter (m)?",
+                options: [
+                    { label: "A", text: "700 m", correct: true },
+                    { label: "B", text: "250 m", correct: false },
+                    { label: "C", text: "520 m", correct: false },
+                    { label: "D", text: "7.000 m", correct: false }
+                ],
+                explanation: "5 hm = 500 m. Total jarak = 500 m + 200 m = 700 m."
+            },
+            {
+                id: 19,
+                tag: "CM & DM",
+                question: "Penghapus papan tulis memiliki panjang 20 sentimeter (cm). Berapa desimeter (dm) panjang penghapus tersebut?",
+                options: [
+                    { label: "A", text: "200 dm", correct: false },
+                    { label: "B", text: "2 dm", correct: true },
+                    { label: "C", text: "0,2 dm", correct: false },
+                    { label: "D", text: "20 dm", correct: false }
+                ],
+                explanation: "10 cm = 1 dm (Naik 1 tangga = dibagi 10). Maka 20 cm = 20 : 10 = 2 dm."
+            },
+            {
+                id: 20,
+                tag: "Kombinasi Satuan",
+                question: "Dito punya tali 1 dam, Kiki punya tali 2 m, dan Rani punya tali 30 dm. Jika ketiga tali disambung, berapa meter (m) total panjangnya?",
+                options: [
+                    { label: "A", text: "12 m", correct: false },
+                    { label: "B", text: "15 m", correct: true },
+                    { label: "C", text: "33 m", correct: false },
+                    { label: "D", text: "150 m", correct: false }
+                ],
+                explanation: "1 dam = 10 m, Kiki = 2 m, 30 dm = 3 m. Total = 10 m + 2 m + 3 m = 15 m."
+            }
+        ];
+
+        // State Management
+        let currentIdx = 0;
+        let userAnswers = {}; // Format: { questionIdx: optionIdx }
+
+        // LocalStorage Key
+        const STORAGE_KEY = "konversi_panjang_quiz_state_v1";
+
+        // Initialize Quiz
+        window.onload = function() {
+            loadSavedState();
+            renderNavGrid();
+            renderQuestion();
+        };
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers));
+        }
+
+        function loadSavedState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    userAnswers = JSON.parse(saved);
+                } catch(e) {
+                    userAnswers = {};
+                }
+            }
+        }
+
+        function renderNavGrid() {
+            const gridEl = document.getElementById('nav-grid');
+            gridEl.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full h-10 rounded-xl font-bold text-xs flex items-center justify-center border transition ${getNavBtnColor(idx)}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                gridEl.appendChild(btn);
+            });
+
+            updateProgressBadge();
+        }
+
+        function getNavBtnColor(idx) {
+            const answered = userAnswers[idx] !== undefined;
+            const isCurrent = idx === currentIdx;
+            
+            let base = "";
+            if (!answered) {
+                base = "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200";
+            } else {
+                const selectedOpt = questions[idx].options[userAnswers[idx]];
+                if (selectedOpt.correct) {
+                    base = "bg-emerald-500 text-white border-emerald-600";
+                } else {
+                    base = "bg-rose-500 text-white border-rose-600";
+                }
+            }
+
+            if (isCurrent) {
+                base += " ring-2 ring-amber-400 ring-offset-2 font-black";
+            }
+
+            return base;
+        }
+
+        function jumpToQuestion(idx) {
+            playSound('click');
+            currentIdx = idx;
+            renderNavGrid();
+            renderQuestion();
+        }
+
+        function changeQuestion(delta) {
+            playSound('click');
+            const newIdx = currentIdx + delta;
+            if (newIdx >= 0 && newIdx < questions.length) {
+                currentIdx = newIdx;
+                renderNavGrid();
+                renderQuestion();
+            }
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIdx];
+            
+            document.getElementById('question-number-badge').textContent = `Soal ${currentIdx + 1} dari 20`;
+            document.getElementById('question-unit-tag').textContent = q.tag;
+            document.getElementById('question-text').textContent = q.question;
+
+            // Nav buttons status
+            document.getElementById('btn-prev').disabled = currentIdx === 0;
+            document.getElementById('btn-prev').classList.toggle('opacity-50', currentIdx === 0);
+            
+            document.getElementById('btn-next').disabled = currentIdx === questions.length - 1;
+            document.getElementById('btn-next').classList.toggle('opacity-50', currentIdx === questions.length - 1);
+
+            // Render options
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            const isAnswered = userAnswers[currentIdx] !== undefined;
+            const selectedOptIdx = userAnswers[currentIdx];
+
+            q.options.forEach((opt, optIdx) => {
+                const btn = document.createElement('button');
+                btn.disabled = isAnswered;
+
+                let optStyle = "bg-slate-50 border-slate-200 text-slate-700 hover:bg-emerald-50 hover:border-emerald-300";
+
+                if (isAnswered) {
+                    if (opt.correct) {
+                        optStyle = "bg-emerald-500 text-white border-emerald-600 font-bold";
+                    } else if (optIdx === selectedOptIdx && !opt.correct) {
+                        optStyle = "bg-rose-500 text-white border-rose-600 font-bold";
+                    } else {
+                        optStyle = "bg-slate-100 text-slate-400 border-slate-200 opacity-60";
+                    }
+                }
+
+                btn.className = `w-full p-3.5 rounded-xl border-2 text-left text-sm md:text-base flex items-center justify-between transition ${optStyle}`;
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-white/20 border border-current flex items-center justify-center font-bold text-xs">${opt.label}</span>
+                        <span>${opt.text}</span>
+                    </div>
+                    ${isAnswered && opt.correct ? '<i class="fa-solid fa-circle-check text-lg"></i>' : ''}
+                    ${isAnswered && optIdx === selectedOptIdx && !opt.correct ? '<i class="fa-solid fa-circle-xmark text-lg"></i>' : ''}
+                `;
+
+                btn.onclick = () => selectOption(optIdx);
+                optContainer.appendChild(btn);
+            });
+
+            // Explanation Box
+            const expBox = document.getElementById('explanation-box');
+            if (isAnswered) {
+                expBox.classList.remove('hidden');
+                const isCorrect = q.options[selectedOptIdx].correct;
+                
+                expBox.className = `mt-5 p-4 rounded-xl text-xs md:text-sm font-semibold border space-y-1 ${
+                    isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900'
+                }`;
+
+                expBox.innerHTML = `
+                    <p class="font-bold flex items-center gap-1.5 text-sm">
+                        ${isCorrect ? '<i class="fa-solid fa-circle-check text-emerald-600"></i> Jawabanmu Tepat!' : '<i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Jawaban Kurang Tepat'}
+                    </p>
+                    <p class="mt-1"><strong>Pembahasan:</strong> ${q.explanation}</p>
+                `;
+            } else {
+                expBox.classList.add('hidden');
+            }
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentIdx] = optIdx;
+            saveState();
+
+            // Play sound based on correctness
+            const isCorrect = questions[currentIdx].options[optIdx].correct;
+            if (isCorrect) {
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            renderNavGrid();
+            renderQuestion();
+            checkQuizCompletion();
+        }
+
+        function updateProgressBadge() {
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('progress-badge').textContent = `Dijawab: ${answeredCount} / 20`;
+
+            // Calculate current score
+            let correctCount = 0;
+            Object.keys(userAnswers).forEach(qIdx => {
+                if (questions[qIdx].options[userAnswers[qIdx]].correct) {
+                    correctCount++;
+                }
+            });
+
+            const score = correctCount * 5; // 20 soal x 5 = 100 max
+            document.getElementById('score-live').textContent = `Skor: ${score}`;
+        }
+
+        function checkQuizCompletion() {
+            const answeredCount = Object.keys(userAnswers).length;
+            if (answeredCount === questions.length) {
+                let correctCount = 0;
+                questions.forEach((q, idx) => {
+                    if (q.options[userAnswers[idx]].correct) {
+                        correctCount++;
+                    }
+                });
+
+                const wrongCount = questions.length - correctCount;
+                const score = correctCount * 5;
+                const accuracy = Math.round((correctCount / questions.length) * 100);
+
+                document.getElementById('res-score').textContent = score;
+                document.getElementById('res-correct').textContent = correctCount;
+                document.getElementById('res-wrong').textContent = wrongCount;
+                document.getElementById('res-accuracy').textContent = `${accuracy}%`;
+
+                const resultCard = document.getElementById('final-result-card');
+                resultCard.classList.remove('hidden');
+                resultCard.scrollIntoView({ behavior: 'smooth' });
+                playSound('win');
+            }
+        }
+
+        function resetQuiz() {
+            playSound('click');
+            if (confirm("Apakah kamu yakin ingin mengulang quiz dari awal? Semua jawaban tersimpan akan dihapus.")) {
+                userAnswers = {};
+                localStorage.removeItem(STORAGE_KEY);
+                currentIdx = 0;
+                document.getElementById('final-result-card').classList.add('hidden');
+                renderNavGrid();
+                renderQuestion();
+            }
+        }
+    </script>
+</body>
+</html>
